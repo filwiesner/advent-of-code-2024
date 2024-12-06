@@ -87,14 +87,14 @@ fun main() {
 
         val loopedMaps = mapsWithObstacle.filter { map ->
             var lastPath: GuardMap.MoveResult = map.moveGuard()
-            var endPoints = mutableSetOf<IntOffset>()
-            var moves = 0
+
+            val pastMoves = mutableListOf<Pair<IntOffset, IntOffset>>()
             while (lastPath.exitedTheMap == false) {
-                moves += 1
                 lastPath = map.moveGuard()
-                if (moves > input.size * input.size)
-                    return@filter true // looping
-                endPoints.add(lastPath.path.last())
+
+                val startAndEnd = with(lastPath.path) { first() to last() }
+                if (pastMoves.contains(startAndEnd)) return@filter true // looping
+                pastMoves.add(startAndEnd)
             }
             false
         }
