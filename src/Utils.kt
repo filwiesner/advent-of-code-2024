@@ -78,8 +78,8 @@ fun IntOffset.directionTo(offset: IntOffset): Direction {
     return Direction.entries.first { direction -> direction.offset == directionVector }
 }
 operator fun IntOffset.plus(direction: Direction) = this + direction.offset
-fun IntOffset.getDiagonal(direction: IntOffset) = sequence {
-    var current = this@getDiagonal
+fun IntOffset.getPath(direction: IntOffset) = sequence {
+    var current = this@getPath
     while (true) {
         yield(current)
         current += direction
@@ -92,7 +92,7 @@ fun extractGridLine(start: IntOffset, end: IntOffset, matrix: List<List<Char>>):
 
     val direction = start.directionTo(end).offset
     return start
-        .getDiagonal(direction)
+        .getPath(direction)
         .takeWhile { offset -> offset - direction != end } // take while the last coord is not the last
         .mapNotNull { offset -> matrix.getOrNull(offset.y)?.getOrNull(offset.x) }
         .joinToString(separator = "")
